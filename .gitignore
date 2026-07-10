@@ -1,0 +1,30 @@
+# OS junk
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Secrets / env - should never live in this repo
+*.env
+.env*
+.secrets/
+*.pem
+*.key
+id_rsa*
+github_pat_*
+*token*.txt
+
+# Node (in case tooling gets added later)
+node_modules/
+npm-debug.log*
+
+# Misc local scratch
+*.local
+.tmp/
