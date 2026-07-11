@@ -9,14 +9,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400..700&display=swap" rel="stylesheet">
 <style>
-  :root { --font-head:'DM Serif Display',serif; --font-body:'DM Sans',sans-serif; --green:#1C8A5D; --ink:#332B30; --rose:#DDA3B2; --line:#F2ECEC; --mut:#9C9095; --txt:#6E6266; }
+  :root { --font-head:'DM Serif Display',serif; --font-body:'DM Sans',sans-serif; --green:#5F7355; --ink:#332B30; --rose:#DDA3B2; --line:#F2ECEC; --mut:#9C9095; --txt:#6E6266; }
   * { box-sizing:border-box; }
   html { scroll-behavior:smooth; }
   body { margin:0; color:var(--ink); font-family:var(--font-body),system-ui,sans-serif; font-size:15px; line-height:1.65; }
   a { color:var(--green); text-decoration:none; }
   a:hover { color:#C2617D; }
   p { text-wrap:pretty; }
-  ::selection { background:#E6F4EC; }
+  ::selection { background:#E7EAE0; }
   img { display:block; }
   @keyframes hazeDrift { 0%{background-position:0% 0%} 50%{background-position:-8% 5%} 100%{background-position:0% 0%} }
   @keyframes scrollNudge { 0%,100%{transform:translateY(0);opacity:.85} 50%{transform:translateY(7px);opacity:.5} }
@@ -24,14 +24,14 @@
   .nvl { cursor:pointer; font-size:13px; color:#3F383C; padding-bottom:3px; border-bottom:1px solid transparent; }
   .nvl:hover { color:var(--green); border-bottom-color:var(--green); }
   .btn { background:var(--green); color:#fff; border:none; border-radius:8px; font-family:var(--font-body),sans-serif; font-weight:600; cursor:pointer; }
-  .btn:hover { background:#166B47; }
+  .btn:hover { background:#4C5C44; }
   .btn-ghost { background:rgba(255,255,255,0.08); backdrop-filter:blur(4px); color:#fff; border:1px solid rgba(255,255,255,0.55); border-radius:8px; font-family:var(--font-body),sans-serif; font-weight:500; cursor:pointer; }
   .btn-ghost:hover { background:rgba(255,255,255,0.22); }
   .card { background:#fff; border:1px solid var(--line); border-radius:26px; overflow:hidden; cursor:pointer; display:flex; flex-direction:column; transition:all .2s; }
   .card:hover { transform:translateY(-5px); box-shadow:0 24px 48px -26px rgba(50,40,38,0.20); }
   .tile { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 8px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:9px; transition:all .18s; }
   .tile:hover { transform:translateY(-3px); box-shadow:0 14px 28px -18px rgba(50,40,38,0.22); }
-  .ic { width:36px; height:36px; border-radius:50%; background:#E3F3EA; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--green); }
+  .ic { width:36px; height:36px; border-radius:50%; background:#E7EAE0; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--green); }
   .ic svg { display:block; }
   .chip { font-size:9.5px; letter-spacing:.03em; color:#8A7B7E; border:1px solid var(--line); border-radius:20px; padding:4px 10px; white-space:nowrap; }
   .kick { font-size:10.5px; letter-spacing:.2em; color:var(--rose); font-weight:600; }
@@ -40,7 +40,7 @@
   .day.past { color:#D8CDCF; cursor:default; }
   .day.booked { color:#C7BABC; text-decoration:line-through; background:#F5EEEF; cursor:not-allowed; }
   .day.sel { background:var(--ink); color:#fff; font-weight:600; }
-  .day.inr { background:#E6F4EC; border-radius:0; }
+  .day.inr { background:#E7EAE0; border-radius:0; }
   /* booking widget */
   .bookbox { position:sticky; top:96px; background:#fff; border:1px solid #F2ECEC; border-radius:20px; padding:26px; box-shadow:0 24px 52px -30px rgba(50,40,38,0.16); }
   /* photo badges & buttons */
@@ -113,7 +113,7 @@
       </nav>
       <div style="display:flex;align-items:center;gap:16px">
         <div class="hdr-sync" style="display:flex;align-items:center;gap:6px;font-size:11px;color:#8A7B7E">
-          <span style="width:5px;height:5px;border-radius:50%;background:#1C8A5D;box-shadow:0 0 0 3px rgba(28,138,93,0.16)"></span>
+          <span style="width:5px;height:5px;border-radius:50%;background:#5F7355;box-shadow:0 0 0 3px rgba(95,115,85,0.16)"></span>
           <span>Synced with Airbnb</span>
         </div>
         <button class="btn hdr-book" style="padding:10px 20px;font-size:13px" onclick="app.go('stays')">Book Your Stay</button>
@@ -142,16 +142,16 @@
   </section>
 
   <!-- FOOTER -->
-  <footer style="background:#14231D;color:#C9D3CD">
+  <footer style="background:#22281C;color:#C9D3CD">
     <div class="wrap g2" style="padding-top:64px;padding-bottom:48px;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px">
       <div>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6FC79A" stroke-width="1.6" style="margin-bottom:10px"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"></path></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9BAA88" stroke-width="1.6" style="margin-bottom:10px"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"></path></svg>
         <div style="font-family:var(--font-head),serif;font-size:19px;letter-spacing:0.1em;color:#FBF5F4">ARTBNB</div>
-        <div style="font-size:9px;letter-spacing:0.28em;color:#86A395;margin-top:6px;margin-bottom:16px">EL SEGUNDO, CA</div>
-        <p style="font-size:13px;color:#96AC9F;max-width:270px;margin:0">Fully furnished apartments near the beach, LAX, and LA's West Side. Hosted by Sofia, Superhost.</p>
+        <div style="font-size:9px;letter-spacing:0.28em;color:#94A085;margin-top:6px;margin-bottom:16px">EL SEGUNDO, CA</div>
+        <p style="font-size:13px;color:#A3AD96;max-width:270px;margin:0">Fully furnished apartments near the beach, LAX, and LA's West Side. Hosted by Sofia, Superhost.</p>
       </div>
       <div>
-        <div style="font-size:11px;letter-spacing:0.12em;color:#86A395;font-weight:600;margin-bottom:15px">EXPLORE</div>
+        <div style="font-size:11px;letter-spacing:0.12em;color:#94A085;font-weight:600;margin-bottom:15px">EXPLORE</div>
         <div style="display:flex;flex-direction:column;gap:11px;font-size:13px">
           <span onclick="app.go('stays')" style="cursor:pointer">Stays</span>
           <span onclick="app.go('neighborhood')" style="cursor:pointer">Neighborhood</span>
@@ -159,14 +159,14 @@
         </div>
       </div>
       <div>
-        <div style="font-size:11px;letter-spacing:0.12em;color:#86A395;font-weight:600;margin-bottom:15px">BOOK</div>
+        <div style="font-size:11px;letter-spacing:0.12em;color:#94A085;font-weight:600;margin-bottom:15px">BOOK</div>
         <div style="display:flex;flex-direction:column;gap:11px;font-size:13px">
-          <a href="https://www.airbnb.com/users/profile/1465495323183186778" target="_blank" rel="noopener" style="color:#6FC79A">Find us on Airbnb</a>
+          <a href="https://www.airbnb.com/users/profile/1465495323183186778" target="_blank" rel="noopener" style="color:#9BAA88">Find us on Airbnb</a>
           <span onclick="app.go('stays')" style="cursor:pointer">Check availability</span>
         </div>
       </div>
     </div>
-    <div style="border-top:1px solid #223A30"><div class="wrap" style="padding-top:18px;padding-bottom:18px;font-size:11px;color:#86A395;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px"><span>© 2026 ARTBNB. All rights reserved.</span><span>Calendars synced with Airbnb</span></div></div>
+    <div style="border-top:1px solid #33392C"><div class="wrap" style="padding-top:18px;padding-bottom:18px;font-size:11px;color:#94A085;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px"><span>© 2026 ARTBNB. All rights reserved.</span><span>Calendars synced with Airbnb</span></div></div>
   </footer>
 </div>
 
@@ -455,10 +455,10 @@ function card(l, showSynced){
     '<div class="arch" style="margin:16px 16px 0;aspect-ratio:0.8">' +
       '<img src="'+pic(l.images[0],720)+'" alt="'+l.name+'" loading="lazy" style="width:100%;height:100%;object-fit:cover" onclick="app.openLightbox(\''+l.id+'\',0);event.stopPropagation()">' +
       '<div class="pbadge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-4.5-4.5L9 19"/></svg>'+l.images.length+' photos</div>' +
-      (showSynced ? '<div style="position:absolute;bottom:12px;right:12px;background:rgba(255,255,255,0.94);border-radius:20px;padding:5px 11px;font-size:10px;font-weight:600;letter-spacing:0.05em;color:#1C8A5D;display:flex;align-items:center;gap:5px"><span style="width:5px;height:5px;border-radius:50%;background:#1C8A5D;display:inline-block"></span>SYNCED</div>' : '') +
+      (showSynced ? '<div style="position:absolute;bottom:12px;right:12px;background:rgba(255,255,255,0.94);border-radius:20px;padding:5px 11px;font-size:10px;font-weight:600;letter-spacing:0.05em;color:#5F7355;display:flex;align-items:center;gap:5px"><span style="width:5px;height:5px;border-radius:50%;background:#5F7355;display:inline-block"></span>SYNCED</div>' : '') +
     '</div>' +
     '<div style="padding:20px 22px 24px;display:flex;flex-direction:column;flex:1">' +
-      '<div style="font-size:9.5px;letter-spacing:0.11em;font-weight:600;color:#1C8A5D;margin-bottom:8px">'+ratingLabel(l)+'</div>' +
+      '<div style="font-size:9.5px;letter-spacing:0.11em;font-weight:600;color:#5F7355;margin-bottom:8px">'+ratingLabel(l)+'</div>' +
       '<h3 style="font-family:var(--font-head),serif;font-weight:500;font-size:19px;margin:0 0 5px">'+l.name+'</h3>' +
       '<div style="font-size:12px;color:#9C9095;margin-bottom:12px">'+l.type+'</div>' +
       '<p style="font-size:13.5px;color:#6E6266;margin:0 0 16px;flex:1">'+l.blurb+'</p>' +
@@ -493,15 +493,15 @@ function calendarHtml(l){
   var prevOn = state.monthOffset>0;
   return '<div style="border:1px solid #F2ECEC;border-radius:12px;padding:16px;margin-bottom:16px">' +
     '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">' +
-      '<button onclick="app.prevMonth()" style="'+(prevOn?'background:#E3F3EA;border:1px solid #F9E1E6;cursor:pointer;color:#332B30':'background:#FEFAFA;border:1px solid #FDF6F7;cursor:not-allowed;color:#D8CDCF')+';width:30px;height:30px;border-radius:8px;font-size:13px">←</button>' +
+      '<button onclick="app.prevMonth()" style="'+(prevOn?'background:#E7EAE0;border:1px solid #F9E1E6;cursor:pointer;color:#332B30':'background:#FEFAFA;border:1px solid #FDF6F7;cursor:not-allowed;color:#D8CDCF')+';width:30px;height:30px;border-radius:8px;font-size:13px">←</button>' +
       '<span style="font-family:var(--font-head),serif;font-size:15.5px">'+label+'</span>' +
-      '<button onclick="app.nextMonth()" style="background:#E3F3EA;border:1px solid #F9E1E6;width:30px;height:30px;border-radius:8px;cursor:pointer;color:#332B30;font-size:13px">→</button>' +
+      '<button onclick="app.nextMonth()" style="background:#E7EAE0;border:1px solid #F9E1E6;width:30px;height:30px;border-radius:8px;cursor:pointer;color:#332B30;font-size:13px">→</button>' +
     '</div>' +
     '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:7px">'+['S','M','T','W','T','F','S'].map(function(w){return '<div style="text-align:center;font-size:10px;color:#B0A5A8;font-weight:600">'+w+'</div>';}).join('')+'</div>' +
     '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px">'+cells+'</div>' +
     '<div style="display:flex;gap:14px;margin-top:14px;font-size:10px;color:#9C9095">' +
       '<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:4px;background:#332B30;display:inline-block"></span>Selected</span>' +
-      '<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:4px;background:#E6F4EC;display:inline-block"></span>In stay</span>' +
+      '<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:4px;background:#E7EAE0;display:inline-block"></span>In stay</span>' +
       '<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:4px;background:#F5EEEF;display:inline-block"></span>Booked</span>' +
     '</div></div>';
 }
@@ -539,14 +539,14 @@ function viewHome(){
     '<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:14px"><div>' +
       '<div class="kick" style="margin-bottom:12px">STYLISH. COMFORTABLE. ALL YOURS.</div>' +
       '<h2 style="font-family:var(--font-head),serif;font-weight:400;font-size:32px;margin:0">Our Apartments</h2></div>' +
-      '<span onclick="app.go(\'stays\')" style="cursor:pointer;font-size:13.5px;color:#1C8A5D;font-weight:500;border-bottom:1px solid #D8EDE0;padding-bottom:2px">View all '+LISTINGS.length+' stays →</span></div>' +
+      '<span onclick="app.go(\'stays\')" style="cursor:pointer;font-size:13.5px;color:#5F7355;font-weight:500;border-bottom:1px solid #D8EDE0;padding-bottom:2px">View all '+LISTINGS.length+' stays →</span></div>' +
     '<div class="g3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:36px">'+featured+'</div>' +
   '</section>' +
 
   '<section style="position:relative;overflow:hidden">' +
     '<div class="wrap gLife" style="padding-top:76px;padding-bottom:76px;display:grid;grid-template-columns:0.85fr 2fr;gap:52px;align-items:center">' +
     '<div><p style="font-family:var(--font-head),serif;font-size:22px;line-height:1.4;margin:0 0 16px">Wake up by the coast. Work from a calm apartment. Walk to coffee. End the day near the ocean.</p>' +
-    '<span onclick="app.go(\'neighborhood\')" style="cursor:pointer;font-size:13.5px;color:#1C8A5D;font-weight:500;border-bottom:1px solid #D8EDE0;padding-bottom:2px">Live the ARTBNB lifestyle →</span></div>' +
+    '<span onclick="app.go(\'neighborhood\')" style="cursor:pointer;font-size:13.5px;color:#5F7355;font-weight:500;border-bottom:1px solid #D8EDE0;padding-bottom:2px">Live the ARTBNB lifestyle →</span></div>' +
     '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px">' +
       [1,2,3,4].map(function(n,i){ return '<div class="arch" style="aspect-ratio:0.72;'+(i%2?'margin-top:30px':'')+'"><img src="'+(IMG['life'+n]||'')+'" alt="El Segundo lifestyle" loading="lazy" style="width:100%;height:100%;object-fit:cover"></div>'; }).join('') +
     '</div></div>' +
@@ -556,7 +556,7 @@ function viewHome(){
     '<div><div class="kick" style="margin-bottom:14px">THE PERFECT LOCATION</div>' +
     '<h2 style="font-family:var(--font-head),serif;font-weight:400;font-size:30px;margin:0 0 24px">Why El Segundo?</h2>' +
     '<div style="display:flex;flex-direction:column;gap:14px;margin-bottom:30px">' +
-      WHY.map(function(p){ return '<div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#1C8A5D;font-size:14px;margin-top:2px">✓</span><span style="font-size:13.5px;color:#3F383C;line-height:1.55">'+p+'</span></div>'; }).join('') +
+      WHY.map(function(p){ return '<div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#5F7355;font-size:14px;margin-top:2px">✓</span><span style="font-size:13.5px;color:#3F383C;line-height:1.55">'+p+'</span></div>'; }).join('') +
     '</div>' +
     '<button class="btn" style="padding:13px 22px;font-size:13.5px" onclick="app.go(\'neighborhood\')">Explore the neighborhood</button></div>' +
     '<div style="position:relative;aspect-ratio:1.28;border-radius:20px;overflow:hidden">' +
@@ -582,7 +582,7 @@ function viewHome(){
       ['★ 4.86 rating','899 reviews','Superhost','Responds within an hour'].map(function(b){ return '<span style="background:#fff;border:1px solid #F2ECEC;border-radius:20px;padding:7px 14px;font-size:12px;color:#3F383C;font-weight:600">'+b+'</span>'; }).join('') +
     '</div>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 28px;max-width:480px">' +
-      PROMISES.map(function(p){ return '<div style="display:flex;gap:10px;align-items:center;font-size:13.5px;color:#3F383C"><span style="color:#1C8A5D">♥</span>'+p+'</div>'; }).join('') +
+      PROMISES.map(function(p){ return '<div style="display:flex;gap:10px;align-items:center;font-size:13.5px;color:#3F383C"><span style="color:#5F7355">♥</span>'+p+'</div>'; }).join('') +
     '</div></div>' +
   '</div></section>' +
   '</main>';
@@ -623,10 +623,10 @@ function viewListing(){
       '<p style="font-size:14.5px;color:#3F383C;line-height:1.75;margin:0 0 32px;max-width:540px">'+l.longBlurb+'</p>' +
       '<h3 style="font-family:var(--font-head),serif;font-weight:500;font-size:20px;margin:0 0 18px">What this place offers</h3>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 22px;margin-bottom:36px;max-width:500px">' +
-        l.full.map(function(a){ return '<div style="display:flex;gap:12px;align-items:center;font-size:13.5px;color:#3F383C"><span style="color:#1C8A5D;display:inline-flex;line-height:0">'+amIcon(a)+'</span>'+a+'</div>'; }).join('') +
+        l.full.map(function(a){ return '<div style="display:flex;gap:12px;align-items:center;font-size:13.5px;color:#3F383C"><span style="color:#5F7355;display:inline-flex;line-height:0">'+amIcon(a)+'</span>'+a+'</div>'; }).join('') +
       '</div>' +
       '<div style="background:#FBFAFA;border:1px solid #F2ECEC;border-radius:16px;padding:22px 24px;max-width:540px">' +
-        '<div style="display:flex;align-items:center;gap:9px;margin-bottom:9px"><span style="width:7px;height:7px;border-radius:50%;background:#1C8A5D;box-shadow:0 0 0 3px rgba(28,138,93,0.16)"></span>' +
+        '<div style="display:flex;align-items:center;gap:9px;margin-bottom:9px"><span style="width:7px;height:7px;border-radius:50%;background:#5F7355;box-shadow:0 0 0 3px rgba(95,115,85,0.16)"></span>' +
         '<span style="font-size:12px;font-weight:600;letter-spacing:0.07em;color:#3F383C">CALENDAR SYNCED WITH AIRBNB</span></div>' +
         '<p style="font-size:13px;color:#8A7B7E;margin:0">Availability updates automatically from the host\'s Airbnb calendar. Prefer to book on Airbnb? <a href="'+airbnbUrl(l)+'" target="_blank" rel="noopener">View this listing on Airbnb →</a></p>' +
       '</div>' +
@@ -634,7 +634,7 @@ function viewListing(){
     '<div class="bookbox">' +
       '<div style="margin-bottom:5px"><div><span style="font-family:var(--font-head),serif;font-size:26px">'+money(l.price)+'</span><span style="font-size:13px;color:#9C9095"> / night</span></div>' +
       '<div style="font-size:12px;color:#9C9095;margin-top:2px">~'+monthly(l)+' / month</div></div>' +
-      '<div style="font-size:12px;color:#1C8A5D;font-weight:600;margin-bottom:20px">Message first · booking confirmed by the host</div>' +
+      '<div style="font-size:12px;color:#5F7355;font-weight:600;margin-bottom:20px">Message first · booking confirmed by the host</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid #F2ECEC;border-radius:12px;overflow:hidden;margin-bottom:16px">' +
         '<div style="padding:12px 15px;border-right:1px solid #F2ECEC"><div style="font-size:9.5px;letter-spacing:0.09em;color:#9C9095;font-weight:600;margin-bottom:4px">CHECK-IN</div><div style="font-size:13.5px">'+fmt(ci)+'</div></div>' +
         '<div style="padding:12px 15px"><div style="font-size:9.5px;letter-spacing:0.09em;color:#9C9095;font-weight:600;margin-bottom:4px">CHECKOUT</div><div style="font-size:13.5px">'+fmt(co)+'</div></div>' +
