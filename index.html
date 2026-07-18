@@ -439,7 +439,21 @@ function monthly(l){ return money(Math.round(l.price*30/50)*50); }
 
 /* Demo availability — replace with real Airbnb iCal sync. */
 var _bk=null;
+var REAL_AVAILABILITY=null, _availFetchStarted=false;
+function loadRealAvailability(){
+  if(_availFetchStarted) return;
+  _availFetchStarted=true;
+  fetch('availability.json',{cache:'no-store'})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(data){ if(data){ REAL_AVAILABILITY=data; render(); } })
+    .catch(function(){ /* keep demo fallback, fail silently */ });
+}
 function bookedSet(id){
+  if(REAL_AVAILABILITY && REAL_AVAILABILITY[id]){
+    var real={};
+    REAL_AVAILABILITY[id].forEach(function(d){ real[d]=1; });
+    return real;
+  }
   if(_bk && _bk.id===id) return _bk.set;
   var shift=idx(id)*4, set={}, base=today();
   [[2,4],[18+shift,26+shift],[40+shift,46+shift]].forEach(function(r){
@@ -744,6 +758,7 @@ if(typeof document.addEventListener==='function'){
   }, {passive:true});
 }
 render();
+loadRealAvailability();
 })();
 
 </script>
