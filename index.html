@@ -383,7 +383,18 @@ var LISTINGS = [
     images:[
       'https://a0.muscache.com/im/pictures/airflow/Hosting-798020136962308080/original/fac68718-2cf7-47ba-b633-1c5af76a70d2.jpg?im_w=1200',
       'https://a0.muscache.com/im/pictures/airflow/Hosting-798020136962308080/original/7d6eb138-d4a5-45fe-b4f9-92b8ce64fcb9.jpg?im_w=720',
-      'https://a0.muscache.com/im/pictures/airflow/Hosting-798020136962308080/original/e2dc1213-411a-4f0e-a52c-380f99b8851a.jpg?im_w=720'] }
+      'https://a0.muscache.com/im/pictures/airflow/Hosting-798020136962308080/original/e2dc1213-411a-4f0e-a52c-380f99b8851a.jpg?im_w=720'] },
+  { id:'bali', roomId:'46607058',
+    name:'Bali Vibes One-Bedroom',
+    type:'1 Bed · 1 Bath · Sleeps 4', price:160, rating:'4.83', reviews:88,
+    blurb:'Bali-inspired calm with a king bed, fast Wi-Fi, self check-in, and the pool right outside — a short hop to the beach.',
+    longBlurb:'A quiet, spa-calm one-bedroom styled around Bali: warm textures, a luxurious king bed, and a second bed for a group of four. Upgraded September 2025. Self check-in with a smartlock, fast 365 Mbps Wi-Fi and a dedicated workspace for remote work, soaking tub, full kitchen, and reserved parking. Shared pool and BBQ backyard, next to the park and minutes from the sand.',
+    amenities:['King bed','Self check-in','Pool'],
+    full:['Fast Wi-Fi','Kitchen','Workspace','Parking','Pool & BBQ','King bed','Self check-in','Local Host Support'],
+    images:[
+      'https://a0.muscache.com/im/pictures/airflow/Hosting-46607058/original/ca4a7abb-8c56-48b2-bbc1-baaf1f25313d.jpg?im_w=1200',
+      'https://a0.muscache.com/im/pictures/airflow/Hosting-46607058/original/5c7169d0-75ff-4a62-a18b-4c5c861b4455.jpg?im_w=720',
+      'https://a0.muscache.com/im/pictures/airflow/Hosting-46607058/original/670aaf22-a591-4e5c-8a81-bbe24fc2a739.jpg?im_w=720'] }
 ];
 
 /* Merge full photo sets (injected at build) and normalize URLs */
@@ -447,13 +458,15 @@ function loadRealAvailability(){
   _availFetchStarted=true;
   Promise.all([
     fetch('availability.json',{cache:'no-store'}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; }),
-    fetch(API+'/api/booked').then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; })
+    fetch(API+'/api/booked').then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; }),
+    fetch(API+'/api/prices').then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; })
   ]).then(function(res){
-    var airbnb=res[0]||{}, direct=res[1]||{}, merged={}, any=false;
+    var airbnb=res[0]||{}, direct=res[1]||{}, prices=res[2]||{}, merged={}, any=false;
     LISTINGS.forEach(function(l){
       var a=(airbnb[l.id]||[]), d=(direct[l.id]||[]);
       if(airbnb[l.id]||direct[l.id]){ any=true; }
       merged[l.id]=a.concat(d);
+      if(prices[l.id] && prices[l.id].nightly>0){ l.price=prices[l.id].nightly; l.cleaning=prices[l.id].cleaning; any=true; }
     });
     if(any){ REAL_AVAILABILITY=merged; render(); }
   });
@@ -632,7 +645,7 @@ function viewStays(){
 function viewListing(){
   var l = byId(state.listingId);
   var ci=state.checkIn, co=state.checkOut, hasRange=!!(ci&&co);
-  var nights=hasRange?daysBetween(ci,co):0, cleaning=120;
+  var nights=hasRange?daysBetween(ci,co):0, cleaning=(l.cleaning||120);
   var subtotal=nights*l.price, total=subtotal+cleaning;
   var mk=state.messageKind;
   var msgBg = mk==='error'?'#FBEEEC':(mk==='success'?'#E8F1E9':'#F5EEEF');
