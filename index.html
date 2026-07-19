@@ -420,7 +420,8 @@ var WHY = [
 var PROMISES = ['Responds within an hour','Hotel-standard cleaning','Professionally managed','Family & business ready'];
 
 /* ================= state & helpers ================= */
-var state = { view:'home', listingId:'chic', monthOffset:0, checkIn:null, checkOut:null, message:'', messageKind:'info' };
+var state = { view:'home', listingId:'chic', monthOffset:0, checkIn:null, checkOut:null, message:'', messageKind:'info', gName:'', gEmail:'', gPhone:'', gMsg:'' };
+var API = 'https://api.artbnbla.com';
 function byId(id){ for(var i=0;i<LISTINGS.length;i++) if(LISTINGS[i].id===id) return LISTINGS[i]; return LISTINGS[0]; }
 function idx(id){ for(var i=0;i<LISTINGS.length;i++) if(LISTINGS[i].id===id) return i; return 0; }
 function iso(d){ return d.toISOString().slice(0,10); }
@@ -429,6 +430,7 @@ function parseISO(s){ var p=s.split('-'); return new Date(+p[0], +p[1]-1, +p[2])
 function daysBetween(a,b){ return Math.round((parseISO(b)-parseISO(a))/86400000); }
 function money(n){ return '$'+n.toLocaleString('en-US'); }
 function fmt(s){ if(!s) return 'Add date'; return parseISO(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+function escA(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function ratingLabel(l){
   if(l.guestFavorite) return '★ '+l.rating+' · GUEST FAVORITE';
   if(l.rating) return '★ '+l.rating+' ('+l.reviews+' reviews)';
@@ -443,10 +445,18 @@ var REAL_AVAILABILITY=null, _availFetchStarted=false;
 function loadRealAvailability(){
   if(_availFetchStarted) return;
   _availFetchStarted=true;
-  fetch('availability.json',{cache:'no-store'})
-    .then(function(r){ return r.ok ? r.json() : null; })
-    .then(function(data){ if(data){ REAL_AVAILABILITY=data; render(); } })
-    .catch(function(){ /* keep demo fallback, fail silently */ });
+  Promise.all([
+    fetch('availability.json',{cache:'no-store'}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; }),
+    fetch(API+'/api/booked').then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; })
+  ]).then(function(res){
+    var airbnb=res[0]||{}, direct=res[1]||{}, merged={}, any=false;
+    LISTINGS.forEach(function(l){
+      var a=(airbnb[l.id]||[]), d=(direct[l.id]||[]);
+      if(airbnb[l.id]||direct[l.id]){ any=true; }
+      merged[l.id]=a.concat(d);
+    });
+    if(any){ REAL_AVAILABILITY=merged; render(); }
+  });
 }
 function bookedSet(id){
   if(REAL_AVAILABILITY && REAL_AVAILABILITY[id]){
@@ -665,8 +675,14 @@ function viewListing(){
         '<div style="display:flex;justify-content:space-between;font-size:13px;color:#3F383C;margin-bottom:8px"><span>'+money(l.price)+' × '+nights+' nights</span><span>'+money(subtotal)+'</span></div>' +
         '<div style="display:flex;justify-content:space-between;font-size:13px;color:#3F383C;margin-bottom:8px"><span>Cleaning fee</span><span>'+money(cleaning)+'</span></div>' +
         '<div style="display:flex;justify-content:space-between;font-family:var(--font-head),serif;font-size:18px;padding-top:8px;border-top:1px solid #F5EEEF;margin-top:8px"><span>Total</span><span>'+money(total)+'</span></div></div>' : '') +
+      (hasRange ? '<div style="display:flex;flex-direction:column;gap:9px;margin-bottom:14px">' +
+        '<input id="bkName" type="text" placeholder="Full name" value="'+escA(state.gName)+'" oninput="app.setF(\'gName\',this.value)" autocomplete="name" style="padding:11px 13px;border:1px solid #F2ECEC;border-radius:9px;font-size:13.5px;font-family:var(--font-body),sans-serif">' +
+        '<input id="bkEmail" type="email" placeholder="Email" value="'+escA(state.gEmail)+'" oninput="app.setF(\'gEmail\',this.value)" autocomplete="email" style="padding:11px 13px;border:1px solid #F2ECEC;border-radius:9px;font-size:13.5px;font-family:var(--font-body),sans-serif">' +
+        '<input id="bkPhone" type="tel" placeholder="Phone" value="'+escA(state.gPhone)+'" oninput="app.setF(\'gPhone\',this.value)" autocomplete="tel" style="padding:11px 13px;border:1px solid #F2ECEC;border-radius:9px;font-size:13.5px;font-family:var(--font-body),sans-serif">' +
+        '<textarea id="bkMsg" placeholder="Message to Sofia (optional)" oninput="app.setF(\'gMsg\',this.value)" rows="2" style="padding:11px 13px;border:1px solid #F2ECEC;border-radius:9px;font-size:13.5px;font-family:var(--font-body),sans-serif;resize:vertical">'+escA(state.gMsg)+'</textarea>' +
+        '</div>' : '') +
       (state.message ? '<div style="border-radius:9px;padding:11px 14px;font-size:13px;margin-bottom:16px;line-height:1.5;background:'+msgBg+';color:'+msgCo+';border:1px solid '+msgBr+'">'+state.message+'</div>' : '') +
-      '<button class="btn" style="width:100%;padding:15px;font-size:14px;'+(hasRange?'':'background:#332B30')+'" onclick="app.reserve()">'+(hasRange?'Send booking inquiry':'Select your dates')+'</button>' +
+      '<button class="btn" id="bkBtn" style="width:100%;padding:15px;font-size:14px;'+(hasRange?'':'background:#332B30')+'" onclick="app.reserve()">'+(hasRange?'Send booking request':'Select your dates')+'</button>' +
       '<a href="'+airbnbUrl(l)+'" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:13px;font-size:13px;color:#9C9095">or view on Airbnb →</a>' +
     '</div></div></main>';
 }
@@ -734,10 +750,30 @@ window.app = {
     else { state.checkOut=dISO; state.message=''; state.messageKind='info'; }
     render();
   },
+  setF: function(k,v){ state[k]=v; },
   reserve: function(){
-    if(!state.checkIn || !state.checkOut){ state.message='Pick your check-in and checkout dates to continue.'; state.messageKind='error'; }
-    else { state.message="Inquiry sent! Sofia responds within an hour — she'll confirm availability before you book. (Demo — no payment taken.)"; state.messageKind='success'; }
-    render();
+    if(!state.checkIn || !state.checkOut){ state.message='Pick your check-in and checkout dates to continue.'; state.messageKind='error'; render(); return; }
+    var name=(state.gName||'').trim(), email=(state.gEmail||'').trim(), phone=(state.gPhone||'').trim();
+    if(name.length<2){ state.message='Please enter your full name.'; state.messageKind='error'; render(); return; }
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ state.message='Please enter a valid email address.'; state.messageKind='error'; render(); return; }
+    if(phone.replace(/\D/g,'').length<7){ state.message='Please enter a valid phone number.'; state.messageKind='error'; render(); return; }
+    var l=byId(state.listingId), nights=daysBetween(state.checkIn,state.checkOut);
+    state.message='Sending your request…'; state.messageKind='info'; render();
+    fetch(API+'/api/bookings', {
+      method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
+      body: JSON.stringify({ apartment:l.id, checkIn:state.checkIn, checkOut:state.checkOut,
+        name:name, email:email, phone:phone, message:(state.gMsg||'').trim(),
+        quotedTotal: nights*l.price+120, website:'' })
+    }).then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
+    .then(function(res){
+      if(res.ok){
+        state.message="Request sent! Sofia reviews every request personally and will confirm by email or phone, usually within the hour. Your dates aren't held until she approves.";
+        state.messageKind='success'; state.checkIn=null; state.checkOut=null; state.gMsg='';
+      } else {
+        state.message=(res.d && res.d.error) || 'Something went wrong — please try again.'; state.messageKind='error';
+      }
+      render();
+    }).catch(function(){ state.message='Network error — please check your connection and try again.'; state.messageKind='error'; render(); });
   }
 };
 
