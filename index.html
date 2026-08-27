@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400..700&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
 <style>
   :root { --font-head:'DM Serif Display',serif; --font-body:'DM Sans',sans-serif; --green:#5F7355; --ink:#332B30; --rose:#DDA3B2; --line:#F2ECEC; --mut:#9C9095; --txt:#6E6266; }
   * { box-sizing:border-box; }
@@ -60,6 +61,25 @@
   #lb-cap { color:#FCF4F6; font-size:13px; margin-top:16px; text-align:center; padding:0 20px; }
   #lb-count { color:rgba(255,255,255,0.65); font-size:11px; letter-spacing:.12em; margin-top:5px; }
   body.no-scroll { overflow:hidden; }
+  /* checkout */
+  #checkout { display:none; position:fixed; inset:0; z-index:120; background:rgba(30,24,26,0.55); backdrop-filter:blur(3px); align-items:flex-start; justify-content:center; overflow-y:auto; padding:28px 16px; }
+  #checkout.open { display:flex; }
+  .co-box { background:#fff; border-radius:20px; max-width:460px; width:100%; padding:26px 26px 24px; box-shadow:0 30px 70px -30px rgba(50,40,38,0.5); }
+  .co-steps { display:flex; gap:6px; margin-bottom:18px; }
+  .co-steps div { flex:1; height:3px; border-radius:2px; background:#EFE9E3; }
+  .co-steps div.on { background:var(--green); }
+  .co-h { font-family:var(--font-head),serif; font-size:21px; margin:0 0 4px; }
+  .co-sub { font-size:13px; color:var(--mut); margin:0 0 18px; }
+  .co-sum { background:#FAF7F3; border-radius:12px; padding:14px 16px; margin-bottom:16px; font-size:13.5px; }
+  .co-sum .row { display:flex; justify-content:space-between; padding:3px 0; }
+  .co-sum .tot { display:flex; justify-content:space-between; font-family:var(--font-head),serif; font-size:17px; border-top:1px solid #EFE7DF; margin-top:8px; padding-top:9px; }
+  .co-in { width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:9px; font-size:14px; font-family:var(--font-body),sans-serif; margin-bottom:9px; }
+  .co-in:focus { outline:2px solid var(--green); outline-offset:-1px; border-color:transparent; }
+  .co-err { background:#FBEEEC; border:1px solid #F0D5CE; color:#A5432B; border-radius:9px; padding:10px 13px; font-size:13px; margin-bottom:12px; }
+  .co-ok { background:#E7EAE0; border:1px solid #CBD3C2; color:#4C5C44; border-radius:9px; padding:12px 14px; font-size:13.5px; margin-bottom:12px; }
+  .co-note { font-size:11.5px; color:var(--mut); margin-top:10px; line-height:1.55; }
+  .co-x { position:absolute; top:14px; right:16px; background:none; border:none; font-size:20px; color:var(--mut); cursor:pointer; }
+  .co-back { background:none; border:none; color:var(--mut); font-size:13px; cursor:pointer; padding:0; margin-top:10px; font-family:var(--font-body),sans-serif; }
   /* mobile menu */
   .mmbtn { display:none; width:40px; height:40px; border:1px solid var(--line); border-radius:9px; background:#fff; cursor:pointer; align-items:center; justify-content:center; color:var(--ink); }
   #mobileMenu { display:none; position:absolute; top:100%; left:0; right:0; background:rgba(255,255,255,0.98); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); box-shadow:0 24px 40px -28px rgba(50,40,38,0.25); }
@@ -175,6 +195,14 @@
     </div>
     <div style="border-top:1px solid #33392C"><div class="wrap" style="padding-top:18px;padding-bottom:18px;font-size:11px;color:#94A085;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px"><span>© 2026 ARTBNB. All rights reserved.</span><span>Calendars synced with Airbnb</span></div></div>
   </footer>
+</div>
+
+<div id="checkout" onclick="app.coBackdrop(event)">
+  <div class="co-box" style="position:relative" onclick="event.stopPropagation()">
+    <button class="co-x" onclick="app.closeCheckout()" aria-label="Close">&times;</button>
+    <div class="co-steps"><div id="st1"></div><div id="st2"></div><div id="st3"></div></div>
+    <div id="coBody"></div>
+  </div>
 </div>
 
 <div id="lightbox" role="dialog" aria-label="Photo gallery" onclick="app.lbBackdrop(event)">
@@ -688,14 +716,8 @@ function viewListing(){
         '<div style="display:flex;justify-content:space-between;font-size:13px;color:#3F383C;margin-bottom:8px"><span>'+money(l.price)+' × '+nights+' nights</span><span>'+money(subtotal)+'</span></div>' +
         '<div style="display:flex;justify-content:space-between;font-size:13px;color:#3F383C;margin-bottom:8px"><span>Cleaning fee</span><span>'+money(cleaning)+'</span></div>' +
         '<div style="display:flex;justify-content:space-between;font-family:var(--font-head),serif;font-size:18px;padding-top:8px;border-top:1px solid #F5EEEF;margin-top:8px"><span>Total</span><span>'+money(total)+'</span></div></div>' : '') +
-      (hasRange ? '<div style="display:flex;flex-direction:column;gap:9px;margin-bottom:14px">' +
-        '<input id="bkName" type="text" placeholder="Full name" value="'+escA(state.gName)+'" oninput="app.setF(\'gName\',this.value)" autocomplete="name" style="padding:11px 13px;border:1px solid #F2ECEC;border-radius:9px;font-size:13.5px;font-family:var(--font-body),sans-serif">' +
-        '<input id="bkEmail" type="email" placeholder="Email" value="'+escA(state.gEmail)+'" oninput="app.setF(\'gEmail\',this.value)" autocomplete="email" style="padding:11px 13px;border:1px solid #F2ECEC;border-radius:9px;font-size:13.5px;font-family:var(--font-body),sans-serif">' +
-        '<input id="bkPhone" type="tel" placeholder="Phone" value="'+escA(state.gPhone)+'" oninput="app.setF(\'gPhone\',this.value)" autocomplete="tel" style="padding:11px 13px;border:1px solid #F2ECEC;border-radius:9px;font-size:13.5px;font-family:var(--font-body),sans-serif">' +
-        '<textarea id="bkMsg" placeholder="Message to Sofia (optional)" oninput="app.setF(\'gMsg\',this.value)" rows="2" style="padding:11px 13px;border:1px solid #F2ECEC;border-radius:9px;font-size:13.5px;font-family:var(--font-body),sans-serif;resize:vertical">'+escA(state.gMsg)+'</textarea>' +
-        '</div>' : '') +
       (state.message ? '<div style="border-radius:9px;padding:11px 14px;font-size:13px;margin-bottom:16px;line-height:1.5;background:'+msgBg+';color:'+msgCo+';border:1px solid '+msgBr+'">'+state.message+'</div>' : '') +
-      '<button class="btn" id="bkBtn" style="width:100%;padding:15px;font-size:14px;'+(hasRange?'':'background:#332B30')+'" onclick="app.reserve()">'+(hasRange?'Send booking request':'Select your dates')+'</button>' +
+      '<button class="btn" id="bkBtn" style="width:100%;padding:15px;font-size:14px;'+(hasRange?'':'background:#332B30')+'" onclick="app.openCheckout()">'+(hasRange?'Request to book':'Select your dates')+'</button>' +
       '<a href="'+airbnbUrl(l)+'" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:13px;font-size:13px;color:#9C9095">or view on Airbnb →</a>' +
     '</div></div></main>';
 }
@@ -764,31 +786,116 @@ window.app = {
     render();
   },
   setF: function(k,v){ state[k]=v; },
-  reserve: function(){
+  /* ---- checkout ---- */
+  openCheckout: function(){
     if(!state.checkIn || !state.checkOut){ state.message='Pick your check-in and checkout dates to continue.'; state.messageKind='error'; render(); return; }
-    var name=(state.gName||'').trim(), email=(state.gEmail||'').trim(), phone=(state.gPhone||'').trim();
-    if(name.length<2){ state.message='Please enter your full name.'; state.messageKind='error'; render(); return; }
-    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ state.message='Please enter a valid email address.'; state.messageKind='error'; render(); return; }
-    if(phone.replace(/\D/g,'').length<7){ state.message='Please enter a valid phone number.'; state.messageKind='error'; render(); return; }
-    var l=byId(state.listingId), nights=daysBetween(state.checkIn,state.checkOut);
-    state.message='Sending your request…'; state.messageKind='info'; render();
-    fetch(API+'/api/bookings', {
-      method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
-      body: JSON.stringify({ apartment:l.id, checkIn:state.checkIn, checkOut:state.checkOut,
-        name:name, email:email, phone:phone, message:(state.gMsg||'').trim(),
-        quotedTotal: nights*l.price+120, website:'' })
-    }).then(function(r){ return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
-    .then(function(res){
-      if(res.ok){
-        state.message="Request sent! Sofia reviews every request personally and will confirm by email or phone, usually within the hour. Your dates aren't held until she approves.";
-        state.messageKind='success'; state.checkIn=null; state.checkOut=null; state.gMsg='';
-      } else {
-        state.message=(res.d && res.d.error) || 'Something went wrong — please try again.'; state.messageKind='error';
-      }
-      render();
-    }).catch(function(){ state.message='Network error — please check your connection and try again.'; state.messageKind='error'; render(); });
-  }
+    co.step=1; co.err=''; co.busy=false;
+    document.getElementById('checkout').classList.add('open');
+    document.body.classList.add('no-scroll');
+    renderCheckout();
+  },
+  closeCheckout: function(){
+    document.getElementById('checkout').classList.remove('open');
+    document.body.classList.remove('no-scroll');
+    if(co.step===3){ state.checkIn=null; state.checkOut=null; render(); }
+  },
+  coBackdrop: function(e){ if(e.target && e.target.id==='checkout') window.app.closeCheckout(); },
+  coSet: function(k,v){ state[k]=v; },
+  coNext: async function(){ await coStep1Next(); },
+  coBack: function(){ co.step=1; co.err=''; renderCheckout(); },
+  coPay: async function(){ await coSubmit(); }
 };
+
+/* ================= checkout flow ================= */
+var co = { step:1, err:'', busy:false, stripe:null, elements:null, cardEl:null, clientSecret:null, customer:null };
+function coTotals(){
+  var l=byId(state.listingId), n=daysBetween(state.checkIn,state.checkOut);
+  var clean=(l.cleaning||150), sub=n*l.price;
+  return { l:l, nights:n, sub:sub, clean:clean, total:sub+clean };
+}
+function coSummary(){
+  var t=coTotals();
+  return '<div class="co-sum">' +
+    '<div style="font-weight:600;margin-bottom:6px">'+t.l.name+'</div>' +
+    '<div class="row"><span>'+fmt(state.checkIn)+' → '+fmt(state.checkOut)+'</span><span>'+t.nights+' night'+(t.nights===1?'':'s')+'</span></div>' +
+    '<div class="row"><span>'+money(t.l.price)+' × '+t.nights+'</span><span>'+money(t.sub)+'</span></div>' +
+    '<div class="row"><span>Cleaning fee</span><span>'+money(t.clean)+'</span></div>' +
+    '<div class="tot"><span>Total</span><span>'+money(t.total)+'</span></div></div>';
+}
+function renderCheckout(){
+  for(var i=1;i<=3;i++){ var el=document.getElementById('st'+i); if(el) el.className = (i<=co.step?'on':''); }
+  var b=document.getElementById('coBody');
+  if(co.step===1){
+    b.innerHTML = '<h3 class="co-h">Your details</h3><p class="co-sub">Sofia reviews every request personally.</p>' +
+      coSummary() +
+      (co.err?'<div class="co-err">'+co.err+'</div>':'') +
+      '<input class="co-in" id="cName" placeholder="Full name" autocomplete="name" value="'+escA(state.gName)+'" oninput="app.coSet(\'gName\',this.value)">' +
+      '<input class="co-in" id="cEmail" type="email" placeholder="Email" autocomplete="email" value="'+escA(state.gEmail)+'" oninput="app.coSet(\'gEmail\',this.value)">' +
+      '<input class="co-in" id="cPhone" type="tel" placeholder="Phone" autocomplete="tel" value="'+escA(state.gPhone)+'" oninput="app.coSet(\'gPhone\',this.value)">' +
+      '<textarea class="co-in" id="cMsg" rows="2" placeholder="Anything Sofia should know? (optional)" oninput="app.coSet(\'gMsg\',this.value)">'+escA(state.gMsg)+'</textarea>' +
+      '<button class="btn" style="width:100%;padding:14px;font-size:14px" onclick="app.coNext()"'+(co.busy?' disabled':'')+'>'+(co.busy?'One moment…':'Continue to payment')+'</button>';
+  } else if(co.step===2){
+    b.innerHTML = '<h3 class="co-h">Payment details</h3><p class="co-sub">Your card is saved securely — <strong>you are not charged yet</strong>.</p>' +
+      coSummary() +
+      (co.err?'<div class="co-err">'+co.err+'</div>':'') +
+      '<div id="cardEl" style="border:1px solid var(--line);border-radius:9px;padding:12px;margin-bottom:12px"></div>' +
+      '<button class="btn" style="width:100%;padding:14px;font-size:14px" id="payBtn" onclick="app.coPay()"'+(co.busy?' disabled':'')+'>'+(co.busy?'Saving…':'Send booking request')+'</button>' +
+      '<div class="co-note">Your dates are not held until Sofia approves. She usually replies within the hour (9 AM–9 PM PT). You will only be charged '+money(coTotals().total)+' if she confirms — if she cannot host you, nothing is taken.</div>' +
+      '<button class="co-back" onclick="app.coBack()">← Back</button>';
+    mountCard();
+  } else {
+    b.innerHTML = '<h3 class="co-h">Request sent 🎉</h3>' +
+      '<div class="co-ok">Thanks, '+escA((state.gName||'').split(' ')[0])+'! Sofia will confirm by email or phone, usually within the hour.</div>' +
+      coSummary() +
+      '<div class="co-note">We emailed a confirmation to '+escA(state.gEmail)+'. Your card is saved but <strong>not charged</strong> — it is only charged if Sofia approves these dates.</div>' +
+      '<button class="btn" style="width:100%;padding:14px;font-size:14px;margin-top:14px" onclick="app.closeCheckout()">Done</button>';
+  }
+}
+async function coStep1Next(){
+  var name=(state.gName||'').trim(), email=(state.gEmail||'').trim(), phone=(state.gPhone||'').trim();
+  if(name.length<2){ co.err='Please enter your full name.'; renderCheckout(); return; }
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ co.err='Please enter a valid email address.'; renderCheckout(); return; }
+  if(phone.replace(/\D/g,'').length<7){ co.err='Please enter a valid phone number.'; renderCheckout(); return; }
+  co.err=''; co.busy=true; renderCheckout();
+  try{
+    var r=await fetch(API+'/api/setup-intent',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:email,name:name})});
+    var d=await r.json();
+    if(!r.ok||!d.ok) throw new Error(d.error||'Could not start payment');
+    co.clientSecret=d.clientSecret; co.customer=d.customer;
+    if(!co.stripe) co.stripe=Stripe(d.pk);
+    co.busy=false; co.step=2; renderCheckout();
+  }catch(e){ co.busy=false; co.err=e.message||'Something went wrong. Please try again.'; renderCheckout(); }
+}
+function mountCard(){
+  if(!co.stripe) return;
+  co.elements = co.stripe.elements({ clientSecret: co.clientSecret,
+    appearance:{ theme:'flat', variables:{ colorPrimary:'#5F7355', colorText:'#332B30', fontFamily:'DM Sans, system-ui, sans-serif', borderRadius:'8px', colorBackground:'#ffffff' } } });
+  co.cardEl = co.elements.create('payment', { layout:'tabs' });
+  co.cardEl.mount('#cardEl');
+}
+async function coSubmit(){
+  if(co.busy) return;
+  co.busy=true; co.err=''; 
+  var btn=document.getElementById('payBtn'); if(btn){ btn.disabled=true; btn.textContent='Saving…'; }
+  try{
+    var res = await co.stripe.confirmSetup({ elements: co.elements, redirect:'if_required' });
+    if(res.error) throw new Error(res.error.message||'Card could not be saved');
+    var si = res.setupIntent;
+    var t = coTotals();
+    var r = await fetch(API+'/api/bookings',{ method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
+      body: JSON.stringify({ apartment:t.l.id, checkIn:state.checkIn, checkOut:state.checkOut,
+        name:(state.gName||'').trim(), email:(state.gEmail||'').trim(), phone:(state.gPhone||'').trim(),
+        message:(state.gMsg||'').trim(), quotedTotal:t.total, website:'',
+        stripeCustomer:co.customer, stripePm:si.payment_method })});
+    var d = await r.json();
+    if(!r.ok||!d.ok) throw new Error(d.error||'Could not send your request');
+    co.busy=false; co.step=3; renderCheckout();
+  }catch(e){
+    co.busy=false; co.err=e.message||'Something went wrong. Please try again.'; renderCheckout();
+  }
+}
+
 
 /* keyboard + touch controls for the lightbox */
 if(typeof document.addEventListener==='function'){
