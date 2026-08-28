@@ -823,31 +823,23 @@ function coSummary(){
     '<div class="tot"><span>Total</span><span>'+money(t.total)+'</span></div></div>';
 }
 function renderCheckout(){
-  for(var i=1;i<=3;i++){ var el=document.getElementById('st'+i); if(el) el.className = (i<=co.step?'on':''); }
+  for(var i=1;i<=3;i++){ var e2=document.getElementById('st'+i); if(e2) e2.className=(i<=(co.step===3?3:co.step)?'on':''); }
   var b=document.getElementById('coBody');
   if(co.step===1){
-    b.innerHTML = '<h3 class="co-h">Your details</h3><p class="co-sub">Sofia reviews every request personally.</p>' +
+    b.innerHTML = '<h3 class="co-h">Request to book</h3><p class="co-sub">Sofia reviews every request personally — no payment now.</p>' +
       coSummary() +
       (co.err?'<div class="co-err">'+co.err+'</div>':'') +
-      '<input class="co-in" id="cName" placeholder="Full name" autocomplete="name" value="'+escA(state.gName)+'" oninput="app.coSet(\'gName\',this.value)">' +
-      '<input class="co-in" id="cEmail" type="email" placeholder="Email" autocomplete="email" value="'+escA(state.gEmail)+'" oninput="app.coSet(\'gEmail\',this.value)">' +
-      '<input class="co-in" id="cPhone" type="tel" placeholder="Phone" autocomplete="tel" value="'+escA(state.gPhone)+'" oninput="app.coSet(\'gPhone\',this.value)">' +
-      '<textarea class="co-in" id="cMsg" rows="2" placeholder="Anything Sofia should know? (optional)" oninput="app.coSet(\'gMsg\',this.value)">'+escA(state.gMsg)+'</textarea>' +
-      '<button class="btn" style="width:100%;padding:14px;font-size:14px" onclick="app.coNext()"'+(co.busy?' disabled':'')+'>'+(co.busy?'One moment…':'Continue to payment')+'</button>';
-  } else if(co.step===2){
-    b.innerHTML = '<h3 class="co-h">Payment details</h3><p class="co-sub">Your card is saved securely — <strong>you are not charged yet</strong>.</p>' +
-      coSummary() +
-      (co.err?'<div class="co-err">'+co.err+'</div>':'') +
-      '<div id="cardEl" style="border:1px solid var(--line);border-radius:9px;padding:12px;margin-bottom:12px"></div>' +
-      '<button class="btn" style="width:100%;padding:14px;font-size:14px" id="payBtn" onclick="app.coPay()"'+(co.busy?' disabled':'')+'>'+(co.busy?'Saving…':'Send booking request')+'</button>' +
-      '<div class="co-note">Your dates are not held until Sofia approves. She usually replies within the hour (9 AM–9 PM PT). You will only be charged '+money(coTotals().total)+' if she confirms — if she cannot host you, nothing is taken.</div>' +
-      '<button class="co-back" onclick="app.coBack()">← Back</button>';
-    mountCard();
+      '<input class="co-in" placeholder="Full name" autocomplete="name" value="'+escA(state.gName)+'" oninput="app.coSet(\'gName\',this.value)">' +
+      '<input class="co-in" type="email" placeholder="Email" autocomplete="email" value="'+escA(state.gEmail)+'" oninput="app.coSet(\'gEmail\',this.value)">' +
+      '<input class="co-in" type="tel" placeholder="Phone" autocomplete="tel" value="'+escA(state.gPhone)+'" oninput="app.coSet(\'gPhone\',this.value)">' +
+      '<textarea class="co-in" rows="2" placeholder="Anything Sofia should know? (optional)" oninput="app.coSet(\'gMsg\',this.value)">'+escA(state.gMsg)+'</textarea>' +
+      '<button class="btn" style="width:100%;padding:14px;font-size:14px" onclick="app.coNext()"'+(co.busy?' disabled':'')+'>'+(co.busy?'Sending…':'Send booking request')+'</button>' +
+      '<div class="co-note">The total above is an estimate. Sofia will confirm your final price and email you a secure payment link once she approves. Your dates are not held until then.</div>';
   } else {
     b.innerHTML = '<h3 class="co-h">Request sent 🎉</h3>' +
-      '<div class="co-ok">Thanks, '+escA((state.gName||'').split(' ')[0])+'! Sofia will confirm by email or phone, usually within the hour.</div>' +
+      '<div class="co-ok">Thanks, '+escA((state.gName||'').split(' ')[0])+'! Sofia will review your dates and reply within the hour (9 AM–9 PM PT).</div>' +
       coSummary() +
-      '<div class="co-note">We emailed a confirmation to '+escA(state.gEmail)+'. Your card is saved but <strong>not charged</strong> — it is only charged if Sofia approves these dates.</div>' +
+      '<div class="co-note">We emailed a confirmation to '+escA(state.gEmail)+'. When Sofia approves, you\'ll get a second email with your final total and a secure link to pay by card. Nothing is charged until you complete that step.</div>' +
       '<button class="btn" style="width:100%;padding:14px;font-size:14px;margin-top:14px" onclick="app.closeCheckout()">Done</button>';
   }
 }
@@ -858,42 +850,14 @@ async function coStep1Next(){
   if(phone.replace(/\D/g,'').length<7){ co.err='Please enter a valid phone number.'; renderCheckout(); return; }
   co.err=''; co.busy=true; renderCheckout();
   try{
-    var r=await fetch(API+'/api/setup-intent',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({email:email,name:name})});
+    var t=coTotals();
+    var r=await fetch(API+'/api/bookings',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
+      body:JSON.stringify({apartment:t.l.id,checkIn:state.checkIn,checkOut:state.checkOut,name:name,email:email,phone:phone,
+        message:(state.gMsg||'').trim(),quotedTotal:t.total,website:''})});
     var d=await r.json();
-    if(!r.ok||!d.ok) throw new Error(d.error||'Could not start payment');
-    co.clientSecret=d.clientSecret; co.customer=d.customer;
-    if(!co.stripe) co.stripe=Stripe(d.pk);
-    co.busy=false; co.step=2; renderCheckout();
-  }catch(e){ co.busy=false; co.err=e.message||'Something went wrong. Please try again.'; renderCheckout(); }
-}
-function mountCard(){
-  if(!co.stripe) return;
-  co.elements = co.stripe.elements({ clientSecret: co.clientSecret,
-    appearance:{ theme:'flat', variables:{ colorPrimary:'#5F7355', colorText:'#332B30', fontFamily:'DM Sans, system-ui, sans-serif', borderRadius:'8px', colorBackground:'#ffffff' } } });
-  co.cardEl = co.elements.create('payment', { layout:'tabs' });
-  co.cardEl.mount('#cardEl');
-}
-async function coSubmit(){
-  if(co.busy) return;
-  co.busy=true; co.err=''; 
-  var btn=document.getElementById('payBtn'); if(btn){ btn.disabled=true; btn.textContent='Saving…'; }
-  try{
-    var res = await co.stripe.confirmSetup({ elements: co.elements, redirect:'if_required' });
-    if(res.error) throw new Error(res.error.message||'Card could not be saved');
-    var si = res.setupIntent;
-    var t = coTotals();
-    var r = await fetch(API+'/api/bookings',{ method:'POST', headers:{'Content-Type':'application/json'}, credentials:'include',
-      body: JSON.stringify({ apartment:t.l.id, checkIn:state.checkIn, checkOut:state.checkOut,
-        name:(state.gName||'').trim(), email:(state.gEmail||'').trim(), phone:(state.gPhone||'').trim(),
-        message:(state.gMsg||'').trim(), quotedTotal:t.total, website:'',
-        stripeCustomer:co.customer, stripePm:si.payment_method })});
-    var d = await r.json();
     if(!r.ok||!d.ok) throw new Error(d.error||'Could not send your request');
     co.busy=false; co.step=3; renderCheckout();
-  }catch(e){
-    co.busy=false; co.err=e.message||'Something went wrong. Please try again.'; renderCheckout();
-  }
+  }catch(e){ co.busy=false; co.err=e.message||'Something went wrong. Please try again.'; renderCheckout(); }
 }
 
 

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Secure payment — ARTBNB</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400..700&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+:root{--sage:#5F7355;--sage-d:#4C5C44;--ink:#332B30;--line:#EDE6E0;--mut:#9C9095;--bg:#FBF8F4;--red:#B4604F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;font-size:15px;
+ display:flex;align-items:flex-start;justify-content:center;min-height:100vh;padding:32px 16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;max-width:460px;width:100%;padding:30px 28px;
+ box-shadow:0 24px 60px -34px rgba(50,40,38,.35)}
+.logo{font-family:'DM Serif Display',serif;font-size:19px;letter-spacing:.09em;text-align:center}
+.logo small{display:block;font-family:'DM Sans';font-size:9px;letter-spacing:.3em;color:#C9A9B2;margin-top:4px}
+h1{font-family:'DM Serif Display',serif;font-weight:400;font-size:22px;margin:22px 0 4px}
+.sub{font-size:13.5px;color:var(--mut);margin:0 0 18px}
+.sum{background:var(--bg);border-radius:12px;padding:15px 17px;margin-bottom:18px;font-size:13.5px}
+.sum .r{display:flex;justify-content:space-between;padding:3px 0}
+.sum .tot{display:flex;justify-content:space-between;font-family:'DM Serif Display',serif;font-size:19px;
+ border-top:1px solid #EFE7DF;margin-top:9px;padding-top:10px}
+.note{font-size:12.5px;color:#6E6266;background:#F7F4EF;border-radius:9px;padding:10px 13px;margin-bottom:16px}
+.btn{background:var(--sage);color:#fff;border:none;border-radius:9px;padding:15px;width:100%;font-size:14.5px;
+ font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--sage-d)} .btn:disabled{opacity:.6;cursor:default}
+.err{background:#FBEEEC;border:1px solid #F0D5CE;color:var(--red);border-radius:9px;padding:11px 14px;font-size:13px;margin-bottom:14px}
+.ok{text-align:center;padding:12px 0}
+.ok .big{font-size:44px;line-height:1}
+.fine{font-size:11.5px;color:var(--mut);margin-top:14px;line-height:1.55;text-align:center}
+#pe{margin-bottom:16px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">ARTBNB<small>EL SEGUNDO, CA</small></div>
+  <div id="body"><p class="sub" style="text-align:center;margin-top:26px">Loading your booking…</p></div>
+</div>
+<script>
+var API='https://api.artbnbla.com';
+var token=new URLSearchParams(location.search).get('t')||'';
+var stripe=null, elements=null, info=null, busy=false;
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function money(n){return '$'+Number(n).toLocaleString('en-US');}
+function fmt(d){return new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function nights(a,b){return Math.round((new Date(b)-new Date(a))/86400000);}
+function el(id){return document.getElementById(id);}
+
+async function boot(){
+  if(!token){ el('body').innerHTML='<p class="err" style="margin-top:20px">This link is missing its payment code. Please use the link from your approval email.</p>'; return; }
+  try{
+    var r=await fetch(API+'/api/pay/info?t='+encodeURIComponent(token));
+    var d=await r.json();
+    if(!r.ok||!d.ok) throw new Error(d.error||'This payment link is not valid.');
+    info=d;
+    if(d.paid){ showPaid(true); return; }
+    render();
+  }catch(e){ el('body').innerHTML='<p class="err" style="margin-top:20px">'+esc(e.message)+'</p>'; }
+}
+function summary(){
+  var n=nights(info.checkIn,info.checkOut);
+  return '<div class="sum"><div style="font-weight:600;margin-bottom:7px">'+esc(info.apartment)+'</div>'+
+    '<div class="r"><span>'+fmt(info.checkIn)+' → '+fmt(info.checkOut)+'</span><span>'+n+' night'+(n===1?'':'s')+'</span></div>'+
+    '<div class="r"><span>Guest</span><span>'+esc(info.guestName)+'</span></div>'+
+    '<div class="tot"><span>Total due</span><span>'+money(info.amount)+'</span></div></div>'+
+    (info.note?'<div class="note">'+esc(info.note)+'</div>':'');
+}
+async function render(){
+  el('body').innerHTML='<h1>Complete your booking</h1><p class="sub">Sofia approved your dates. Pay below to confirm your stay.</p>'+
+    summary()+'<div id="errBox"></div><div id="pe"></div>'+
+    '<button class="btn" id="payBtn">Pay '+money(info.amount)+'</button>'+
+    '<div class="fine">Payments are processed securely by Stripe. ARTBNB never sees or stores your card details.</div>';
+  try{
+    var r=await fetch(API+'/api/pay/intent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:token})});
+    var d=await r.json();
+    if(!r.ok||!d.ok) throw new Error(d.error||'Could not start payment');
+    stripe=Stripe(d.pk);
+    elements=stripe.elements({clientSecret:d.clientSecret,appearance:{theme:'flat',variables:{colorPrimary:'#5F7355',colorText:'#332B30',fontFamily:'DM Sans, system-ui, sans-serif',borderRadius:'8px',colorBackground:'#ffffff'}}});
+    elements.create('payment',{layout:'tabs'}).mount('#pe');
+    el('payBtn').onclick=pay;
+  }catch(e){ el('errBox').innerHTML='<div class="err">'+esc(e.message)+'</div>'; }
+}
+async function pay(){
+  if(busy) return; busy=true;
+  var b=el('payBtn'); b.disabled=true; b.textContent='Processing…'; el('errBox').innerHTML='';
+  try{
+    var res=await stripe.confirmPayment({elements:elements,redirect:'if_required'});
+    if(res.error) throw new Error(res.error.message||'Payment failed');
+    await fetch(API+'/api/pay/confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:token})});
+    showPaid(false);
+  }catch(e){
+    busy=false; b.disabled=false; b.textContent='Pay '+money(info.amount);
+    el('errBox').innerHTML='<div class="err">'+esc(e.message)+'</div>';
+  }
+}
+function showPaid(already){
+  el('body').innerHTML='<div class="ok"><div class="big">✓</div>'+
+    '<h1 style="margin-top:10px">'+(already?'Already paid':'Payment received')+'</h1>'+
+    '<p class="sub">'+(already?'This booking has already been paid in full.':'Thank you! Your stay is confirmed. A receipt is on its way to your email.')+'</p></div>'+
+    (info?summary():'')+
+    '<div class="fine">Questions? Email hello@artbnbla.com or call (424) 217-0331.<br>We look forward to hosting you in El Segundo.</div>';
+}
+boot();
+</script>
+</body>
+</html>
