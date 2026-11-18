@@ -52,6 +52,15 @@ def main():
         print(f"ERROR: AIRBNB_ICAL_URLS is not valid JSON: {e}")
         sys.exit(1)
 
+    # Optional second secret for newer listings, so the main secret
+    # doesn't have to be re-entered in full when a unit is added.
+    extra_raw = os.environ.get("AIRBNB_ICAL_URLS_EXTRA", "").strip()
+    if extra_raw:
+        try:
+            urls.update(json.loads(extra_raw))
+        except json.JSONDecodeError as e:
+            print(f"WARNING: AIRBNB_ICAL_URLS_EXTRA is not valid JSON, ignoring it: {e}")
+
     old = {}
     if OUTPUT_FILE.exists():
         try:

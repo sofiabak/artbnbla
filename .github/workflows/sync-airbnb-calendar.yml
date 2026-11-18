@@ -23,6 +23,7 @@ jobs:
       - name: Sync calendars from Airbnb
         env:
           AIRBNB_ICAL_URLS: ${{ secrets.AIRBNB_ICAL_URLS }}
+          AIRBNB_ICAL_URLS_EXTRA: ${{ secrets.AIRBNB_ICAL_URLS_EXTRA }}
         run: python3 scripts/sync_calendar.py
 
       - name: Commit availability.json if it changed
