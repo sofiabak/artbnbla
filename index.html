@@ -662,7 +662,8 @@ function calendarHtml(l){
 
 /* ================= views ================= */
 function viewHome(){
-  var featured = LISTINGS.slice(0,3).map(function(l){return card(l,false);}).join('');
+  var TOP3 = ['bali','forest','garden'];
+  var featured = TOP3.map(byId).concat(LISTINGS.filter(function(l){return TOP3.indexOf(l.id)<0;})).map(function(l){return card(l,false);}).join('');
   return '' +
   '<main>' +
   '<section style="position:relative;height:calc(100vh - 74px);min-height:620px;overflow:hidden">' +
@@ -693,7 +694,7 @@ function viewHome(){
     '<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:14px"><div>' +
       '<div class="kick" style="margin-bottom:12px">STYLISH. COMFORTABLE. ALL YOURS.</div>' +
       '<h2 style="font-family:var(--font-head),serif;font-weight:400;font-size:32px;margin:0">Our Apartments</h2></div>' +
-      '<span onclick="app.go(\'stays\')" style="cursor:pointer;font-size:13.5px;color:#5F7355;font-weight:500;border-bottom:1px solid #D8EDE0;padding-bottom:2px">View all '+LISTINGS.length+' stays →</span></div>' +
+      '<span onclick="app.go(\'stays\')" style="cursor:pointer;font-size:13.5px;color:#5F7355;font-weight:500;border-bottom:1px solid #D8EDE0;padding-bottom:2px">Check availability →</span></div>' +
     '<div class="g3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:36px">'+featured+'</div>' +
   '</section>' +
 
