@@ -670,7 +670,7 @@ var PHOTOS = (typeof window!=='undefined' && window.__PHOTOS__) || {};
 LISTINGS.forEach(function(l){
   if(PHOTOS[l.id] && PHOTOS[l.id].length) l.images = PHOTOS[l.id].slice();
   l.images = l.images.map(function(u){ return u.split('?')[0]; });
-  l.card = 'images/cards/'+l.id+'.jpg?v=3';
+  l.card = 'images/cards/'+l.id+'.jpg?v=4';
 });
 function pic(u,w){ return u + '?im_w=' + w; }
 
