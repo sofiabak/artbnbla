@@ -1080,7 +1080,7 @@ function renderCheckout(){
       '<div class="co-note">The total above is an estimate. Sofia will confirm your final price and email you a secure payment link once she approves. Your dates are not held until then.</div>';
   } else {
     b.innerHTML = '<h3 class="co-h">Request sent 🎉</h3>' +
-      '<div class="co-ok">Thanks, '+escA((state.gName||'').split(' ')[0])+'! Sofia will review your dates and reply within the hour (9 AM–9 PM PT).</div>' +
+      '<div class="co-ok">Thanks, '+escA((state.gName||'').split(' ')[0])+'! Sofia will review your dates and reply within the hour (7 AM–10 PM PT).</div>' +
       coSummary() +
       '<div class="co-note">We emailed a confirmation to '+escA(state.gEmail)+'. When Sofia approves, you\'ll get a second email with your final total and a secure link to pay by card. Nothing is charged until you complete that step.</div>' +
       '<button class="btn" style="width:100%;padding:14px;font-size:14px;margin-top:14px" onclick="app.closeCheckout()">Done</button>';
