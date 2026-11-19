@@ -683,6 +683,7 @@ LISTINGS.forEach(function(l){
   l.images = l.images.map(function(u){ return u.split('?')[0]; });
   l.card = 'images/cards/'+l.id+'.jpg?v=16';
 });
+LISTINGS.sort(function(a,b){ return (a.rented?1:0)-(b.rented?1:0); });
 function pic(u,w){ return u + '?im_w=' + w; }
 
 var DISTANCES = [
