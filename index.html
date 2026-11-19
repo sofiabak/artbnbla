@@ -670,7 +670,7 @@ var PHOTOS = (typeof window!=='undefined' && window.__PHOTOS__) || {};
 LISTINGS.forEach(function(l){
   if(PHOTOS[l.id] && PHOTOS[l.id].length) l.images = PHOTOS[l.id].slice();
   l.images = l.images.map(function(u){ return u.split('?')[0]; });
-  l.card = 'images/cards/'+l.id+'.jpg?v=9';
+  l.card = 'images/cards/'+l.id+'.jpg?v=10';
 });
 function pic(u,w){ return u + '?im_w=' + w; }
 
@@ -693,9 +693,10 @@ var AMENITY_TILES = [
   ['parking','Reserved Parking'],['wave','Pool & BBQ'],['laundry','Laundry Steps Away'],['tv','Smart Roku TVs']
 ];
 var WHY = [
-  '10 minutes to the beach, 8 minutes to LAX — with no plane noise',
-  'Next to the park, walkable to restaurants and 24hr shopping (82 walk score)',
-  'In between everything: Manhattan Beach, Malibu, Hollywood & Disneyland'
+  '<b>Safe</b> — a friendly beach town next to the park; we live here and love it',
+  '<b>Quiet</b> — close to LAX but not on the flight path, so no plane noise',
+  '<b>Low traffic</b> — small-town streets, walk to restaurants & 24hr shopping (82 walk score)',
+  '<b>Convenient</b> — in between everything: 10 min to the beach, 8 to LAX, 25 to Malibu or Downtown LA'
 ];
 var PROMISES = ['Responds within an hour','Hotel-standard cleaning','Professionally managed','Family & business ready'];
 
@@ -874,11 +875,8 @@ function viewHome(){
     '</div>' +
     '<button class="btn" style="padding:13px 22px;font-size:13.5px" onclick="app.go(\'neighborhood\')">Explore the neighborhood</button></div>' +
     '<div style="position:relative;aspect-ratio:1.28;border-radius:20px;overflow:hidden">' +
-      '<img src="'+(IMG.why||'')+'" alt="View over El Segundo" loading="lazy" style="width:100%;height:100%;object-fit:cover">' +
-      '<div style="position:absolute;top:24px;right:24px;background:rgba(255,255,255,0.96);border-radius:14px;padding:16px 20px;box-shadow:0 18px 40px -22px rgba(50,40,38,0.20);min-width:210px">' +
-      '<div style="font-size:9.5px;letter-spacing:0.13em;color:#DDA3B2;font-weight:600;margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid #F5EEEF">MINUTES AWAY</div>' +
-      DISTANCES.slice(0,7).map(function(d){ return '<div style="display:flex;justify-content:space-between;gap:22px;padding:5px 0;font-size:12px"><span style="color:#3F383C">'+d[0]+'</span><span style="color:#9C9095;font-weight:600">'+d[1]+'</span></div>'; }).join('') +
-    '</div></div>' +
+      '<img src="images/why_map.jpg?v=1" alt="Map: El Segundo is minutes from the beach, LAX, Santa Monica, Malibu and Downtown LA" loading="lazy" style="width:100%;height:100%;object-fit:cover">' +
+    '</div>' +
   '</section>' +
 
   '<section class="wrap" style="padding-top:24px;padding-bottom:130px">' +
