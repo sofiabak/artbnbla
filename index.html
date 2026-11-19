@@ -670,7 +670,7 @@ var PHOTOS = (typeof window!=='undefined' && window.__PHOTOS__) || {};
 LISTINGS.forEach(function(l){
   if(PHOTOS[l.id] && PHOTOS[l.id].length) l.images = PHOTOS[l.id].slice();
   l.images = l.images.map(function(u){ return u.split('?')[0]; });
-  l.card = 'images/cards/'+l.id+'.jpg?v=6';
+  l.card = 'images/cards/'+l.id+'.jpg?v=7';
 });
 function pic(u,w){ return u + '?im_w=' + w; }
 
@@ -765,7 +765,7 @@ function icon(name){ return '<span class="ic">'+ICONS[name]+'</span>'; }
 
 function card(l, showSynced){
   return '<div class="card" onclick="app.openListing(\''+l.id+'\')">' +
-    '<div class="arch" style="margin:16px 16px 0;aspect-ratio:0.9">' +
+    '<div class="arch" style="margin:16px 16px 0;aspect-ratio:1.3">' +
       '<img src="'+(l.card||pic(l.images[0],720))+'" alt="'+l.name+'" loading="lazy" style="width:100%;height:100%;object-fit:cover" onclick="app.openLightbox(\''+l.id+'\',0);event.stopPropagation()">' +
       '<div class="pbadge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-4.5-4.5L9 19"/></svg>'+l.images.length+' photos</div>' +
       (showSynced ? '<div style="position:absolute;bottom:12px;right:12px;background:rgba(255,255,255,0.94);border-radius:20px;padding:5px 11px;font-size:10px;font-weight:600;letter-spacing:0.05em;color:#5F7355;display:flex;align-items:center;gap:5px"><span style="width:5px;height:5px;border-radius:50%;background:#5F7355;display:inline-block"></span>SYNCED</div>' : '') +
