@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ARTBNB — Art-Inspired Furnished Apartments in El Segundo, CA</title>
-<meta name="description" content="Chic, fully furnished art-themed apartments in El Segundo near the beach and LAX. Hosted by Sofia — Airbnb Superhost, 10 years, 899 reviews, 4.86★. Pool, BBQ, king beds, fast Wi-Fi.">
+<meta name="description" content="Chic, fully furnished art-themed apartments in El Segundo near the beach and LAX. Hosted by Sofia — Airbnb Superhost, 10 years, 909 reviews, 4.86★. Pool, BBQ, king beds, fast Wi-Fi.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400..700&display=swap" rel="stylesheet">
@@ -701,6 +701,7 @@ var WHY = [
   '<b>Low traffic</b> — small-town streets, walk to restaurants & 24hr shopping (82 walk score)',
   '<b>Convenient</b> — in between everything: 5 min to the beach, 8 to LAX, 25 to Malibu or Downtown LA'
 ];
+var TOP_REVIEWS = [{"n": "Brian", "l": "Tipp City, OH", "d": "December 2024", "t": "Sofia was such an amazing host. When I arrived, the room was spotless and beautifully decorated, creating such a cozy and relaxing vibe. It had everything I needed, from cooking utensils and silverware to a coffee maker—perfect for my 4-month stay. The neighbors were super friendly and quiet, which made the whole experience even better. This was my first time living in California, and Sofia’s place really helped me feel at home. I highly recommend this Airbnb, and I can’t wait to come back!"}, {"n": "Tommy", "l": "", "d": "October 2026", "t": "This was my first Airbnb stay in LA, and what a great surprise it was. The apartment was beautiful and was able to feel at home straight away. I will NEVER stay at a hotel again when visiting. It was a great location for work and brilliant for relaxing in my own time. I really didn't want to leave and could have stayed forever. I cannot recommend this place enough and the host is amazing. Thanks again for the last 5 weeks. I look forward to staying again very soon."}, {"n": "Jenny", "l": "West Hartford, CT", "d": "September 2021", "t": "This place was a GEM! It was the perfect place for my birthday trip and first time in LA with my sister. The location was perfect - it was close to the airport, the beach (amazing sunsets), and pretty much everywhere else! And the apartment itself was such a vibe with the art and other decor, and the pool was just steps away. We probably would've been happy if we stayed in the whole trip! The perfect little oasis to come back to after a long day. We will definitely be back!!"}, {"n": "Melchisedek", "l": "Jacksonville, FL", "d": "September 2025", "t": "Sofia was an amazing host and for someone that moved to LA for work this stay was amazing. Living close to LAX and work were my priority and this place met both criteria’s and more . I stayed there for 9 months and had no complaints. The stay is close to everything you need without the traffic that usually follow it and Sofia knows the area very well so ask away."}, {"n": "Rachel", "l": "Santa Barbara, CA", "d": "August 2025", "t": "I rented this apartment for my son who was doing a summer internship nearby and it was perfect! Fantastic location...close to everything. The neighbors were kind and quiet and it felt very safe. Sofia was a fantastic host! Responsive and accommodating to any question/request we may have had. I would definitely stay at one of her places again. All in all a great experience!"}, {"n": "Pinar", "l": "Los Angeles, CA", "d": "November 2023", "t": "First of all, Sofia was an amazing host. She was always fast to respond and helpful with everything we asked. Her place was very clean and the common areas were awesome to hang out and get some sun light. The location is 10/10. Close to the airport and beautiful restaurant options, also very close to THE POINT mall where you can do your shopping and eat great food. Topgolf is also pretty close if you are into playing golf. I will recommend this place to my friends and would definitely be back! ❣️"}];
 var PROMISES = ['Responds within an hour','Hotel-standard cleaning','Professionally managed','Family & business ready'];
 
 /* ================= state & helpers ================= */
@@ -844,7 +845,7 @@ function viewHome(){
     '<div style="position:absolute;bottom:26px;left:0;right:0;pointer-events:none"><div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:16px">' +
       '<div style="background:rgba(51,43,48,0.55);backdrop-filter:blur(6px);border-radius:9px;padding:8px 14px;display:flex;align-items:center;gap:7px">' +
         '<span style="width:4px;height:4px;border-radius:50%;background:#F6D8DE;display:inline-block"></span>' +
-        '<span style="font-size:11px;color:#FCF4F6;letter-spacing:0.03em">★ 4.86 · 899 reviews · Superhost, 10 years hosting</span></div>' +
+        '<span style="font-size:11px;color:#FCF4F6;letter-spacing:0.03em">★ 4.86 · 909 reviews · Superhost, 10 years hosting</span></div>' +
       '<div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.85);font-size:11px;letter-spacing:0.14em;animation:scrollNudge 2.6s ease-in-out infinite">SCROLL <span style="font-size:14px">↓</span></div>' +
     '</div></div>' +
   '</section>' +
@@ -894,12 +895,26 @@ function viewHome(){
     '<h2 style="font-family:var(--font-head),serif;font-weight:400;font-size:27px;line-height:1.25;margin:0 0 16px">Hosted by Sofia — a Superhost for 10 years.</h2>' +
     '<p style="font-size:14px;color:#6E6266;max-width:460px;margin:0 0 22px">ARTbnb is my passion — beautiful, unique places to stay on a budget, cleaned to the "Sofia Standard" and professionally managed from booking to checkout.</p>' +
     '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:26px">' +
-      ['★ 4.86 rating','899 reviews','Superhost','Responds within an hour'].map(function(b){ return '<span style="background:#fff;border:1px solid #F2ECEC;border-radius:20px;padding:7px 14px;font-size:12px;color:#3F383C;font-weight:600">'+b+'</span>'; }).join('') +
+      ['★ 4.86 rating','909 reviews','Superhost','Responds within an hour'].map(function(b){ return '<span style="background:#fff;border:1px solid #F2ECEC;border-radius:20px;padding:7px 14px;font-size:12px;color:#3F383C;font-weight:600">'+b+'</span>'; }).join('') +
     '</div>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 28px;max-width:480px">' +
       PROMISES.map(function(p){ return '<div style="display:flex;gap:10px;align-items:center;font-size:13.5px;color:#3F383C"><span style="color:#5F7355">♥</span>'+p+'</div>'; }).join('') +
     '</div></div>' +
   '</div></section>' +
+  '<section class="wrap" style="padding-top:40px;padding-bottom:110px">' +
+    '<div class="kick" style="margin-bottom:14px">FROM OUR GUESTS</div>' +
+    '<h2 style="font-family:var(--font-head),serif;font-weight:400;font-size:30px;margin:0 0 8px">Top reviews of all time</h2>' +
+    '<p style="font-size:14px;color:#6E6266;margin:0 0 30px">★ 4.86 average · 909 reviews on Airbnb</p>' +
+    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px">' +
+      TOP_REVIEWS.map(function(r){ return '<div style="background:#fff;border:1px solid #F2ECEC;border-radius:18px;padding:22px 24px;box-shadow:0 18px 40px -30px rgba(50,40,38,0.25);display:flex;flex-direction:column;gap:12px">' +
+        '<div style="display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:50%;background:#EFE4E6;display:flex;align-items:center;justify-content:center;font-weight:700;color:#5F7355">'+r.n.charAt(0)+'</div>' +
+        '<div><div style="font-weight:600;font-size:14px;color:#3F383C">'+r.n+'</div><div style="font-size:12px;color:#9C9095">'+(r.l?r.l+' · ':'')+r.d+'</div></div></div>' +
+        '<div style="color:#3F383C;font-size:13px;letter-spacing:2px">★★★★★</div>' +
+        '<p style="font-size:13.5px;line-height:1.6;color:#3F383C;margin:0">'+r.t+'</p>' +
+        '<div style="margin-top:auto;font-size:11px;color:#B3A7AB">Verified Airbnb review</div></div>'; }).join('') +
+    '</div>' +
+    '<div style="margin-top:26px"><a href="https://www.airbnb.com/users/show/33888167" target="_blank" rel="noopener" style="font-size:13.5px;color:#5F7355;font-weight:500;border-bottom:1px solid #D8EDE0;padding-bottom:2px">Read all 909 reviews on Airbnb →</a></div>' +
+  '</section>' +
   '</main>';
 }
 
