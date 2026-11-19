@@ -673,7 +673,7 @@ var PHOTOS = (typeof window!=='undefined' && window.__PHOTOS__) || {};
 LISTINGS.forEach(function(l){
   if(PHOTOS[l.id] && PHOTOS[l.id].length) l.images = PHOTOS[l.id].slice();
   l.images = l.images.map(function(u){ return u.split('?')[0]; });
-  l.card = 'images/cards/'+l.id+'.jpg?v=13';
+  l.card = 'images/cards/'+l.id+'.jpg?v=14';
 });
 function pic(u,w){ return u + '?im_w=' + w; }
 
@@ -878,7 +878,7 @@ function viewHome(){
     '</div>' +
     '<button class="btn" style="padding:13px 22px;font-size:13.5px" onclick="app.go(\'neighborhood\')">Explore the neighborhood</button></div>' +
     '<div style="position:relative;aspect-ratio:1.28;border-radius:20px;overflow:hidden">' +
-      '<img src="images/why_map.jpg?v=2" alt="Map: El Segundo is minutes from the beach, LAX, Santa Monica, Malibu and Downtown LA" loading="lazy" style="width:100%;height:100%;object-fit:cover">' +
+      '<img src="images/why_map.jpg?v=3" alt="Map: El Segundo is minutes from the beach, LAX, Santa Monica, Malibu and Downtown LA" loading="lazy" style="width:100%;height:100%;object-fit:cover">' +
     '</div>' +
   '</section>' +
 
